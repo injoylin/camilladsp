@@ -7,6 +7,8 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      PKG_CONFIG_PATH: /usr/lib/x86_64-linux-gnu/pkgconfig
     steps:
       - name: Checkout source
         uses: actions/checkout@v3
@@ -14,7 +16,7 @@ jobs:
       - name: Install dependencies
         run: |
           sudo apt update
-          sudo apt install -y libjack-jackd2-dev pkg-config
+          sudo apt install -y libjack-jackd2-dev libasound2-dev pkg-config
 
       - name: Install Rust
         uses: actions-rs/toolchain@v1
