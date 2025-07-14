@@ -11,26 +11,26 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Checkout source
-      uses: actions/checkout@v3
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
-    - name: Install system dependencies
-      run: |
-        sudo apt update
-        sudo apt install -y libjack-jackd2-dev libasound2-dev pkg-config
+      - name: Install dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libjack-jackd2-dev pkg-config libasound2-dev
 
-    - name: Install Rust toolchain
-      uses: actions-rs/toolchain@v1
-      with:
-        profile: minimal
-        toolchain: stable
-        override: true
+      - name: Install Rust
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          override: true
 
-    - name: Build CamillaDSP with JACK
-      run: cargo build --release --features jack-backend
+      - name: Build CamillaDSP (release with jack feature)
+        run: cargo build --release --features jack-backend
 
-    - name: Upload binary
-      uses: actions/upload-artifact@v3
-      with:
-        name: camilladsp-release
-        path: target/release/camilladsp
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: camilladsp-release
+          path: target/release/camilladsp
