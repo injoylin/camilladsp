@@ -3,33 +3,35 @@ name: Build CamillaDSP w/ JACK
 on:
   workflow_dispatch:
   push:
-    branches: [main, master]
+    branches:
+      - master
 
 jobs:
   build:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
-        with:
-          submodules: recursive
+      - name: Checkout source
+        uses: actions/checkout@v3
 
-      - name: Install dependencies
+      - name: Install system dependencies
         run: |
-          sudo apt-get update
-          sudo apt-get install -y libjack-jackd2-dev pkg-config git build-essential
+          sudo apt update
+          sudo apt install -y libjack-jackd2-dev pkg-config libasound2-dev
 
-      - name: Install Rust toolchain
+      - name: Set up Rust
         uses: actions-rs/toolchain@v1
         with:
           toolchain: stable
           override: true
+          components: rustfmt
 
       - name: Build CamillaDSP (release with jack)
         run: |
-          cargo build --release --features jack
+          RUSTFLAGS="-A clippy::uninlined_format_args" cargo build --release --features jack
 
-      - name: Upload binary
-        uses: actions/upload-artifact@v3
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
         with:
           name: camilladsp-jack-linuxmint24
           path: target/release/camilladsp
