@@ -1,4 +1,4 @@
-name: Build CamillaDSP with JACK
+name: Build CamillaDSP
 
 on:
   workflow_dispatch:
@@ -23,12 +23,11 @@ jobs:
           profile: minimal
           override: true
 
-      - name: Build CamillaDSP (release with jack)
-        run: |
-          cargo build --release --features jack
+      - name: Build CamillaDSP (release)
+        run: cargo build --release
 
       - name: Upload binary
         uses: actions/upload-artifact@v4
         with:
-          name: camilladsp-jack
+          name: camilladsp
           path: target/release/camilladsp
