@@ -1,0 +1,44 @@
+name: Build CamillaDSP with JACK and PipeWire
+
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Install system dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            libjack-jackd2-dev \
+            libasound2-dev \
+            pkg-config \
+            libpipewire-0.3-dev \
+            libspa-0.2-dev \
+            libdbus-1-dev \
+            libssl-dev \
+            libcurl4-openssl-dev
+
+      - name: Install Rust toolchain
+        uses: actions-rs/toolchain@v1
+        with:
+          toolchain: stable
+          profile: minimal
+          override: true
+
+      - name: Build CamillaDSP (release with jack and pipewire features)
+        run: cargo build --release --features "jack-backend pipewire-backend"
+
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: camilladsp-release
+          path: target/release/camilladsp
