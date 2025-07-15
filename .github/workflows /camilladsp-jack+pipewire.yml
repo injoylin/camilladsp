@@ -1,4 +1,4 @@
-name: Build CamillaDSP with JACK and PipeWire
+name: Build CamillaDSP Full Feature
 
 on:
   push:
@@ -19,13 +19,12 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y \
             libjack-jackd2-dev \
-            libasound2-dev \
             pkg-config \
-            libpipewire-0.3-dev \
-            libspa-0.2-dev \
-            libdbus-1-dev \
+            libasound2-dev \
+            libncurses5-dev \
+            libncursesw5-dev \
             libssl-dev \
-            libcurl4-openssl-dev
+            libdbus-1-dev
 
       - name: Install Rust toolchain
         uses: actions-rs/toolchain@v1
@@ -34,11 +33,11 @@ jobs:
           profile: minimal
           override: true
 
-      - name: Build CamillaDSP (release with jack and pipewire features)
-        run: cargo build --release --features "jack-backend pipewire-backend"
+      - name: Build CamillaDSP (release with full features)
+        run: cargo build --release --features "jack-backend ncurses matrix channel-routing"
 
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
         with:
-          name: camilladsp-release
+          name: camilladsp-full-feature
           path: target/release/camilladsp
