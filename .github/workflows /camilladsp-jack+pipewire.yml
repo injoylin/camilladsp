@@ -34,7 +34,7 @@ jobs:
           override: true
 
       - name: Build CamillaDSP (release with full features)
-        run: cargo build --release --features "jack-backend ncurses matrix channel-routing"
+        run: cargo build --release --features "jack-backend ncurses matrixproc channel-routing"
 
       - name: Upload binary artifact
         uses: actions/upload-artifact@v4
